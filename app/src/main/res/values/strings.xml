@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Softball Scout</string>
+
+    <string name="pitch_release">Pitch release</string>
+    <string name="called_strike">Strike called</string>
+    <string name="ball">Ball</string>
+    <string name="foul">Foul ball</string>
+    <string name="swing_strike">Strike swinging</string>
+    <string name="in_play">In play</string>
+    <string name="hit_by_pitch">Hit by pitch</string>
+    <string name="wild_pitch">Wild pitch/passed ball</string>
+    <string name="illegal_pitch">Illegal pitch</string>
+    <string name="walk">Intentional walk</string>
+
+    <string name="new_match">Clean</string>
+    <string name="send">Send</string>
+
+    <string name="number">#</string>
+    <string name="name">Name</string>
+    <string name="duration">Duration</string>
+    <string name="position">Position</string>
+    <string name="action">Event</string>
+
+
+    <string name="save_succes">Data saved successfully</string>
+    <string name="save_failed">Failed to save data</string>
+
+    <string name="delete_succes">Data deleted successfully</string>
+    <string name="delete_failed">Failed to delete data</string>
+</resources>
+
