@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     boolean released,match_start;
     int order = 1;
     long start_time, release_time;
+    Integer strike, balls;
     ArrayList<Record> records = new ArrayList<>();
     RecyclerView recyclerView;
 
@@ -74,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         start_time = sharedPref.getLong("start",0);
         if(start_time>0)match_start = true;
         order = sharedPref.getInt("order",1);
+        strike = sharedPref.getInt("strike",0);
+        balls = sharedPref.getInt("ball",0);
 
         records = storeData();
-        records.add(0,new Record(0,"name","position","duration","event"));
+        records.add(0,new Record(0,"name","position","duration","event",0,0));
         refresh();
 
         release.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(strike<2)strike++;
+                else
+                {
+                    strike=0;
+                    balls = 0;
+                }
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -123,7 +132,13 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(strike<2)strike++;
+                else
+                {
+                    strike=0;
+                    balls = 0;
+                }
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -143,7 +158,13 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(balls<3)balls++;
+                else
+                {
+                    strike=0;
+                    balls = 0;
+                }
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -163,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(strike<2)strike++;
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -183,7 +205,9 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                    strike=0;
+                    balls = 0;
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -203,7 +227,13 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(balls<3)balls++;
+                else
+                {
+                    strike=0;
+                    balls = 0;
+                }
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -223,7 +253,13 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                if(balls<3)balls++;
+                else
+                {
+                    strike=0;
+                    balls = 0;
+                }
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -243,7 +279,9 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                    strike=0;
+                    balls = 0;
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -263,7 +301,9 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                Record record = new Record("Pitch "+ order,position, duration,event);
+                    strike=0;
+                    balls = 0;
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -281,24 +321,27 @@ public class MainActivity extends AppCompatActivity {
 
                 String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
                 Uri file = Uri.fromFile(new File(sdcard+"/Scout"));
-                createFile(file,"Record" + Calendar.getInstance().getTime() + ".txt");
+                createFile(file,"Record" + Calendar.getInstance().getTime() + ".csv");
 
             }
         });
-
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myDB.deleteAllData();
                 records = new ArrayList<>();
                 storeData();
-                records.add(0,new Record("name","position","duration","event"));
+                records.add(0,new Record("name","position","duration","event",strike,balls));
                 order = 1;
+                strike = 0;
+                balls = 0;
                 start_time = System.nanoTime()/1000000000;
                 SharedPreferences sharedPref = getApplication().getSharedPreferences("Scout", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putLong("start", start_time);
                 editor.putInt("order",order);
+                editor.putLong("strike", strike);
+                editor.putInt("ball",balls);
                 editor.apply();
                 refresh();
 
@@ -349,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = myDB.readAllData();
             while(cursor.moveToNext())
             {
-                Record record = new Record(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4));
+                Record record = new Record(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
                 loaded.add(record);
             }
 
@@ -412,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
                 fileOutputStream.write((i.getPosition() + ",").getBytes());
                 fileOutputStream.write((i.getDuration() + ",").getBytes());
                 fileOutputStream.write((i.getAction() + ",").getBytes());
+                fileOutputStream.write((i.getState() + "\n").getBytes());
 
             }
             fileOutputStream.close();
@@ -429,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"horkyskolni@gmail.com"});
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"jaroslavmaron9@gmail.com"});
         i.putExtra(Intent.EXTRA_SUBJECT, "Match record from: " + new Date());
         i.putExtra(Intent.EXTRA_TEXT   , "Match record from: " + new Date());
         // the attachment

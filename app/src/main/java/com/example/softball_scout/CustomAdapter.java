@@ -51,6 +51,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         holder.position.setText(String.valueOf(records.get(position).getPosition()));
         holder.duration.setText(String.valueOf(records.get(position).getDuration()));
         holder.action.setText(String.valueOf(records.get(position).getAction()));
+        holder.state.setText(records.get(position).getState());
 
     }
 
@@ -61,7 +62,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView name,position,duration,action;
+        TextView name,position,duration,action,state;
         ConstraintLayout constraintLayout;
 
         public MyViewHolder(@NonNull View itemView)
@@ -71,6 +72,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             position = itemView.findViewById(R.id.tw_position);
             duration = itemView.findViewById(R.id.tw_duration);
             action = itemView.findViewById(R.id.tw_action);
+            state = itemView.findViewById(R.id.tw_state);
             constraintLayout = itemView.findViewById(R.id.mylayout);
             translate_anim = AnimationUtils.loadAnimation(context,R.anim.translate_anim);
             constraintLayout.setAnimation(translate_anim);

@@ -27,5 +27,6 @@
 
     <string name="delete_succes">Data deleted successfully</string>
     <string name="delete_failed">Failed to delete data</string>
+    <string name="state">State</string>
 </resources>
 

@@ -8,6 +8,9 @@ public class Record {
     private String position;
     private String duration;
     private String action;
+    private Integer strike;
+    private  Integer ball;
+
 
 
     public Integer getId() {
@@ -50,20 +53,45 @@ public class Record {
         this.action = action;
     }
 
+    public Integer getStrike() {
+        return strike;
+    }
 
-    public Record(Integer id, String name, String position, String duration, String action) {
+    public void setStrike(Integer strike) {
+        this.strike = strike;
+    }
+
+    public Integer getBall() {
+        return ball;
+    }
+
+    public void setBall(Integer ball) {
+        this.ball = ball;
+    }
+
+    public String getState()
+    {
+        return (ball + "--" + strike);
+    }
+
+
+    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball) {
         this.id = id;
         this.name = name;
         this.position = position;
         this.duration = duration;
         this.action = action;
+        this.strike = strike;
+        this.ball = ball;
     }
 
-    public Record(String name, String position, String duration, String action) {
+    public Record(String name, String position, String duration, String action,Integer strike, Integer ball) {
         this.name = name;
         this.position = position;
         this.duration = duration;
         this.action = action;
+        this.strike = strike;
+        this.ball = ball;
     }
 
 }

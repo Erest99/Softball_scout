@@ -22,6 +22,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_POSITION = "position";
     private static final String COLUMN_DURATION = "duration";
     private static final String COLUMN_ACTION = "event";
+    private static final String COLUMN_STRIKE = "strike";
+    private static final String COLUMN_BALL = "ball";
 
 
     public MyDatabaseHelper(@Nullable Context context) {
@@ -36,7 +38,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_POSITION + " TEXT, " +
                 COLUMN_DURATION + " TEXT, " +
-                COLUMN_ACTION + " TEXT);";
+                        COLUMN_ACTION + " TEXT, " +
+                        COLUMN_STRIKE + " INTEGER, " +
+                COLUMN_BALL + " INTEGER);";
 
 
 
@@ -59,6 +63,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_POSITION,record.getPosition());
         cv.put(COLUMN_DURATION,record.getDuration());
         cv.put(COLUMN_ACTION,record.getAction());
+        cv.put(COLUMN_STRIKE,record.getStrike());
+        cv.put(COLUMN_BALL,record.getBall());
 
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1)
