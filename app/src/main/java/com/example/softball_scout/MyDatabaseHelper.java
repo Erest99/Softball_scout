@@ -25,6 +25,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_STRIKE = "strike";
     private static final String COLUMN_BALL = "ball";
 
+    private static final String COLUMN_BASESITUATION = "base_situation";
+    private static final String COLUMN_PITCHERNAME = "pitchers_name";
+    private static final String COLUMN_PITCHERSIDE = "pitchers_side";
+    private static final String COLUMN_HITTERNAME = "hitters_name";
+    private static final String COLUMN_HITTERSIDE = "hitters_side";
+
 
     public MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,11 +44,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_POSITION + " TEXT, " +
                 COLUMN_DURATION + " TEXT, " +
-                        COLUMN_ACTION + " TEXT, " +
-                        COLUMN_STRIKE + " INTEGER, " +
-                COLUMN_BALL + " INTEGER);";
-
-
+                COLUMN_ACTION + " TEXT, " +
+                COLUMN_STRIKE + " INTEGER, " +
+                COLUMN_BALL + " TEXT, " +
+                COLUMN_BASESITUATION + " TEXT, " +
+                COLUMN_PITCHERNAME + " TEXT, " +
+                COLUMN_PITCHERSIDE + " TEXT, " +
+                COLUMN_HITTERNAME + " TEXT, " +
+                COLUMN_HITTERSIDE + " INTEGER);";
 
         db.execSQL(query);
     }
@@ -66,6 +75,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_STRIKE,record.getStrike());
         cv.put(COLUMN_BALL,record.getBall());
 
+        cv.put(COLUMN_BASESITUATION,record.getPosition());
+        cv.put(COLUMN_PITCHERNAME,record.getDuration());
+        cv.put(COLUMN_PITCHERSIDE,record.getAction());
+        cv.put(COLUMN_HITTERNAME,record.getStrike());
+        cv.put(COLUMN_HITTERSIDE,record.getBall());
+
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1)
         {
@@ -87,6 +102,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_POSITION,record.getPosition());
         cv.put(COLUMN_DURATION,record.getDuration());
         cv.put(COLUMN_ACTION,record.getAction());
+        cv.put(COLUMN_STRIKE,record.getStrike());
+        cv.put(COLUMN_BALL,record.getBall());
+
+        cv.put(COLUMN_BASESITUATION,record.getPosition());
+        cv.put(COLUMN_PITCHERNAME,record.getDuration());
+        cv.put(COLUMN_PITCHERSIDE,record.getAction());
+        cv.put(COLUMN_HITTERNAME,record.getStrike());
+        cv.put(COLUMN_HITTERSIDE,record.getBall());
 
         long result = db.update(TABLE_NAME,cv,"_id=?",new String[]{record.getId().toString()});
         if (result ==-1)

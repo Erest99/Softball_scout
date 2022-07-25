@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO dopočítávat
     // previous state, outs, inning
-    //TODO aktualizovat databázi pro update Recordu
+    //TODO aktualizovat databázi pro update Recordu -> hotovo otestovat
 
     Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset;
     boolean released,match_start;
