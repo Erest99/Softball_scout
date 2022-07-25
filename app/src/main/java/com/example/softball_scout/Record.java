@@ -10,6 +10,12 @@ public class Record {
     private String action;
     private Integer strike;
     private  Integer ball;
+    private String baseSituation;
+    private String pitcherName;
+    private String pitcherSide;
+    private String hitterName;
+    private String hitterSide;
+
 
 
 
@@ -75,7 +81,47 @@ public class Record {
     }
 
 
-    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball) {
+    public String getBaseSituation() {
+        return baseSituation;
+    }
+
+    public void setBaseSituation(String baseSituation) {
+        this.baseSituation = baseSituation;
+    }
+
+    public String getPitcherName() {
+        return pitcherName;
+    }
+
+    public void setPitcherName(String pitcherName) {
+        this.pitcherName = pitcherName;
+    }
+
+    public String getPitcherSide() {
+        return pitcherSide;
+    }
+
+    public void setPitcherSide(String pitcherSide) {
+        this.pitcherSide = pitcherSide;
+    }
+
+    public String getHitterName() {
+        return hitterName;
+    }
+
+    public void setHitterName(String hitterName) {
+        this.hitterName = hitterName;
+    }
+
+    public String getHitterSide() {
+        return hitterSide;
+    }
+
+    public void setHitterSide(String hitterSide) {
+        this.hitterSide = hitterSide;
+    }
+
+    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -83,15 +129,24 @@ public class Record {
         this.action = action;
         this.strike = strike;
         this.ball = ball;
+        this.baseSituation = baseSituation;
+        this.pitcherName = pitcherName;
+        this.pitcherSide = pitcherSide;
+        this.hitterName = hitterName;
+        this.hitterSide = hitterSide;
     }
 
-    public Record(String name, String position, String duration, String action,Integer strike, Integer ball) {
+    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.name = name;
         this.position = position;
         this.duration = duration;
         this.action = action;
         this.strike = strike;
         this.ball = ball;
+        this.baseSituation = baseSituation;
+        this.pitcherName = pitcherName;
+        this.pitcherSide = pitcherSide;
+        this.hitterName = hitterName;
+        this.hitterSide = hitterSide;
     }
-
 }
