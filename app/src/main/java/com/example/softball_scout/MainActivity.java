@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,6 +19,7 @@ import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,14 +38,20 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO dopočítávat
-    // previous state, outs, inning
+    //TODO previous state, outs, inning
     //TODO aktualizovat databázi pro update Recordu -> hotovo otestovat
+    //TODO možnost inputu pro pitcher, hitter details -> input dialog
+    //TODO možnost inputu pro base state -> new view kde bude obrázek met
 
-    Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset;
+    Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset, bpitcher, bhitter;
     boolean released,match_start;
     int order = 1;
+    int outs;
+    int pstrike;
+    int pball;
+    int inning;
     long start_time, release_time;
+    String pitcher,hitter, hitterSide, pitcherSide, baseSituation;
     Integer strike, balls;
     ArrayList<Record> records = new ArrayList<>();
     RecyclerView recyclerView;
@@ -67,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         send = findViewById(R.id.b_send);
         reset = findViewById(R.id.b_new);
         recyclerView = findViewById(R.id.recyclerView);
+        bpitcher = findViewById(R.id.b_pitcher);
+        bhitter = findViewById(R.id.b_hitter);
 
         myDB = new MyDatabaseHelper(this);
 
@@ -81,9 +92,13 @@ public class MainActivity extends AppCompatActivity {
         order = sharedPref.getInt("order",1);
         strike = sharedPref.getInt("strike",0);
         balls = sharedPref.getInt("ball",0);
+        pball = sharedPref.getInt("pball",0);
+        pstrike = sharedPref.getInt("pstrike",0);
+        outs = sharedPref.getInt("outs",0);
+        inning = sharedPref.getInt("inning",1);
 
         records = storeData();
-        records.add(0,new Record(0,"name","position","duration","event",0,0));
+        records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
         refresh();
 
         release.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +125,14 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(strike<2)strike++;
                 else
                 {
                     strike=0;
                     balls = 0;
+                    addOut();
                 }
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -136,11 +154,14 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(strike<2)strike++;
                 else
                 {
                     strike=0;
                     balls = 0;
+                    addOut();
                 }
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -162,11 +183,14 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(balls<3)balls++;
                 else
                 {
                     strike=0;
                     balls = 0;
+                    updateBaseSituation();
                 }
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -188,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(strike<2)strike++;
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -209,8 +235,11 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                    strike=0;
-                    balls = 0;
+                pball = balls;
+                pstrike = strike;
+                updateBaseSituation();
+                strike=0;
+                balls = 0;
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
@@ -231,11 +260,14 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(balls<3)balls++;
                 else
                 {
                     strike=0;
                     balls = 0;
+                    updateBaseSituation();
                 }
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -257,11 +289,14 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
+                pball = balls;
+                pstrike = strike;
                 if(balls<3)balls++;
                 else
                 {
                     strike=0;
                     balls = 0;
+                    updateBaseSituation();
                 }
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
@@ -283,8 +318,11 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                    strike=0;
-                    balls = 0;
+                pball = balls;
+                pstrike = strike;
+                updateBaseSituation();
+                strike=0;
+                balls = 0;
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
@@ -305,8 +343,11 @@ public class MainActivity extends AppCompatActivity {
                 Long dur = System.nanoTime()/1000000000 - release_time;
                 String position = toTime(pos);
                 String duration = toTime(dur);
-                    strike=0;
-                    balls = 0;
+                pball = balls;
+                pstrike = strike;
+                updateBaseSituation();
+                strike=0;
+                balls = 0;
                 Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
@@ -339,6 +380,10 @@ public class MainActivity extends AppCompatActivity {
                 order = 1;
                 strike = 0;
                 balls = 0;
+                pball = 0;
+                pstrike = 0;
+                inning = 1;
+                outs = 0;
                 start_time = System.nanoTime()/1000000000;
                 SharedPreferences sharedPref = getApplication().getSharedPreferences("Scout", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -346,9 +391,68 @@ public class MainActivity extends AppCompatActivity {
                 editor.putInt("order",order);
                 editor.putLong("strike", strike);
                 editor.putInt("ball",balls);
+                editor.putInt("pball", pball);
+                editor.putInt("pstrike",pstrike);
+                editor.putInt("outs", outs);
+                editor.putInt("inning",inning);
                 editor.apply();
                 refresh();
 
+            }
+        });
+
+        bpitcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setTitle(getApplicationContext().getResources().getString(R.string.pitcherDialog));
+                final EditText nameInput = new EditText(getApplicationContext());
+                builder.setView(nameInput);
+                final EditText sideInput = new EditText(getApplicationContext());
+                builder.setView(sideInput);
+                builder.setPositiveButton(getApplicationContext().getResources().getString(R.string.confirmDialog), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setNegativeButton(getApplicationContext().getResources().getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
+
+            }
+        });
+
+        bhitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setTitle(getApplicationContext().getResources().getString(R.string.hitterDialog));
+                final EditText nameInput = new EditText(getApplicationContext());
+                builder.setView(nameInput);
+                final EditText sideInput = new EditText(getApplicationContext());
+                builder.setView(sideInput);
+                builder.setPositiveButton(getApplicationContext().getResources().getString(R.string.confirmDialog), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setNegativeButton(getApplicationContext().getResources().getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
+
+            }
             }
         });
 
@@ -367,6 +471,21 @@ public class MainActivity extends AppCompatActivity {
             illegal.setEnabled(released);
             intentional.setEnabled(released);
             wild.setEnabled(released);
+
+    }
+
+    void addOut()
+    {
+        outs++;
+        if(outs>2)
+        {
+            inning++;
+            outs = 0;
+        }
+    }
+
+    void updateBaseSituation()
+    {
 
     }
 
@@ -410,6 +529,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong("start", start_time);
         editor.putInt("order",order);
+        editor.putInt("pball", pball);
+        editor.putInt("pstrike",pstrike);
+        editor.putInt("outs", outs);
+        editor.putInt("inning",inning);
         editor.apply();
     }
 

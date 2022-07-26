@@ -10,6 +10,8 @@ public class Record {
     private String action;
     private Integer strike;
     private  Integer ball;
+    private Integer pstrike;
+    private  Integer pball;
     private String baseSituation;
     private String pitcherName;
     private String pitcherSide;
@@ -121,7 +123,24 @@ public class Record {
         this.hitterSide = hitterSide;
     }
 
-    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+
+    public Integer getPstrike() {
+        return pstrike;
+    }
+
+    public void setPstrike(Integer pstrike) {
+        this.pstrike = pstrike;
+    }
+
+    public Integer getPball() {
+        return pball;
+    }
+
+    public void setPball(Integer pball) {
+        this.pball = pball;
+    }
+
+    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -134,9 +153,11 @@ public class Record {
         this.pitcherSide = pitcherSide;
         this.hitterName = hitterName;
         this.hitterSide = hitterSide;
+        this.pstrike = pstrike;
+        this.pball = pball;
     }
 
-    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.name = name;
         this.position = position;
         this.duration = duration;
@@ -148,5 +169,7 @@ public class Record {
         this.pitcherSide = pitcherSide;
         this.hitterName = hitterName;
         this.hitterSide = hitterSide;
+        this.pstrike = pstrike;
+        this.pball = pball;
     }
 }

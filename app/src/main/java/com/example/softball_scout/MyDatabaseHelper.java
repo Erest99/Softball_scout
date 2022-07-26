@@ -30,6 +30,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PITCHERSIDE = "pitchers_side";
     private static final String COLUMN_HITTERNAME = "hitters_name";
     private static final String COLUMN_HITTERSIDE = "hitters_side";
+    private static final String COLUMN_PSTRIKE = "previous_strike";
+    private static final String COLUMN_PBALL = "previous_ball";
 
 
     public MyDatabaseHelper(@Nullable Context context) {
@@ -46,7 +48,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_DURATION + " TEXT, " +
                 COLUMN_ACTION + " TEXT, " +
                 COLUMN_STRIKE + " INTEGER, " +
-                COLUMN_BALL + " TEXT, " +
+                COLUMN_BALL + " INTEGER, " +
+                COLUMN_PSTRIKE + " INTEGER, " +
+                COLUMN_PBALL + " INTEGER, " +
                 COLUMN_BASESITUATION + " TEXT, " +
                 COLUMN_PITCHERNAME + " TEXT, " +
                 COLUMN_PITCHERSIDE + " TEXT, " +
@@ -74,6 +78,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_ACTION,record.getAction());
         cv.put(COLUMN_STRIKE,record.getStrike());
         cv.put(COLUMN_BALL,record.getBall());
+        cv.put(COLUMN_PSTRIKE,record.getStrike());
+        cv.put(COLUMN_PBALL,record.getBall());
 
         cv.put(COLUMN_BASESITUATION,record.getPosition());
         cv.put(COLUMN_PITCHERNAME,record.getDuration());
@@ -104,6 +110,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_ACTION,record.getAction());
         cv.put(COLUMN_STRIKE,record.getStrike());
         cv.put(COLUMN_BALL,record.getBall());
+        cv.put(COLUMN_PSTRIKE,record.getStrike());
+        cv.put(COLUMN_PBALL,record.getBall());
 
         cv.put(COLUMN_BASESITUATION,record.getPosition());
         cv.put(COLUMN_PITCHERNAME,record.getDuration());

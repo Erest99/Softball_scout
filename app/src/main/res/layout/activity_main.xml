@@ -8,6 +8,37 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/b_pitcher"
+        android:layout_width="150dp"
+
+        android:layout_height="75dp"
+        android:layout_marginBottom="8dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:text="@string/pitcherButton"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/b_send"
+        app:layout_constraintEnd_toEndOf="@+id/b_send" />
+
+    <Button
+        android:id="@+id/b_hitter"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="8dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:text="@string/hitterButton"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/b_new"
+        app:layout_constraintEnd_toEndOf="@+id/b_new" />
+
+    <Button
         android:id="@+id/b_release"
         android:layout_width="200dp"
         android:layout_height="75dp"
@@ -44,7 +75,7 @@
         android:layout_width="150dp"
 
         android:layout_height="75dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="8sp"
@@ -234,7 +265,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/b_release"
+        app:layout_constraintBottom_toTopOf="@+id/b_hitter"
         app:layout_constraintEnd_toEndOf="@+id/b_release"
         app:layout_constraintStart_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />

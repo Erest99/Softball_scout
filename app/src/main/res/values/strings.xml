@@ -28,5 +28,14 @@
     <string name="delete_succes">Data deleted successfully</string>
     <string name="delete_failed">Failed to delete data</string>
     <string name="state">State</string>
+
+    <string name="pitcherButton">Pitcher</string>
+    <string name="hitterButton">Hitter</string>
+
+    <string name="pitcherDialog">New pitcher</string>
+    <string name="hitterDialog">New hitter</string>
+
+    <string name="confirmDialog">Confirm</string>
+    <string name="cancelDialog">Cancel</string>
 </resources>
 
