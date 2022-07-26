@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     addOut();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     addOut();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 pball = balls;
                 pstrike = strike;
                 if(strike<2)strike++;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                 myDB.deleteAllData();
                 records = new ArrayList<>();
                 storeData();
-                records.add(0,new Record("name","position","duration","event",strike,balls));
+                records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
                 order = 1;
                 strike = 0;
                 balls = 0;
@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.create().show();
 
             }
-            }
+
         });
 
 
@@ -515,7 +515,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = myDB.readAllData();
             while(cursor.moveToNext())
             {
-                Record record = new Record(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+                Record record = new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side");
                 loaded.add(record);
             }
 
