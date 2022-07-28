@@ -83,6 +83,11 @@ public class Record {
         return (ball + "--" + strike);
     }
 
+    public String getPstate()
+    {
+        return (pball + "--" + pstrike);
+    }
+
 
     public Integer getOut() {
         return out;

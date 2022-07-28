@@ -37,5 +37,7 @@
 
     <string name="confirmDialog">Confirm</string>
     <string name="cancelDialog">Cancel</string>
+    <string name="out">Out</string>
+    <string name="basesituation">Base situation</string>
 </resources>
 
