@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     addOut();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,0,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     addOut();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 pball = balls;
                 pstrike = strike;
                 if(strike<2)strike++;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                     balls = 0;
                     updateBaseSituation();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                 updateBaseSituation();
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;

@@ -17,6 +17,7 @@ public class Record {
     private String pitcherSide;
     private String hitterName;
     private String hitterSide;
+    private Integer out;
 
 
 
@@ -83,6 +84,16 @@ public class Record {
     }
 
 
+    public Integer getOut() {
+        return out;
+    }
+
+    public void setOut(Integer out) {
+        this.out = out;
+    }
+
+
+
     public String getBaseSituation() {
         return baseSituation;
     }
@@ -140,7 +151,7 @@ public class Record {
         this.pball = pball;
     }
 
-    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball,Integer out, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -155,9 +166,10 @@ public class Record {
         this.hitterSide = hitterSide;
         this.pstrike = pstrike;
         this.pball = pball;
+        this.out = out;
     }
 
-    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, Integer out, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.name = name;
         this.position = position;
         this.duration = duration;
@@ -171,5 +183,6 @@ public class Record {
         this.hitterSide = hitterSide;
         this.pstrike = pstrike;
         this.pball = pball;
+        this.out = out;
     }
 }
