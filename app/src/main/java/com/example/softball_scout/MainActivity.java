@@ -38,13 +38,12 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO previous state, outs, inning
-    //TODO aktualizovat databázi pro update Recordu -> hotovo otestovat
-    //TODO možnost inputu pro pitcher, hitter details -> input dialog
     //TODO možnost inputu pro base state -> new view kde bude obrázek met
+    //TODO přidat inning
+    //TODO add row edit (no time)
 
     Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset, bpitcher, bhitter;
-    boolean released,match_start;
+    boolean released,match_start,firstbase,secondbase,thirdbase;
     int order = 1;
     int outs;
     int pstrike;
@@ -96,9 +95,32 @@ public class MainActivity extends AppCompatActivity {
         pstrike = sharedPref.getInt("pstrike",0);
         outs = sharedPref.getInt("outs",0);
         inning = sharedPref.getInt("inning",1);
+        baseSituation = sharedPref.getString("basesituation","empty");
+        pitcher = sharedPref.getString("pitcher","unknown");
+        pitcherSide = sharedPref.getString("pitcherside","unknown");
+        hitter = sharedPref.getString("hitter","unknown");
+        hitterSide = sharedPref.getString("hitterside","unknown");
+
+        Bundle extras = getIntent().getExtras();
+        Intent i = getIntent();
+        if(extras!=null)
+        {
+            if(i.hasExtra("pitchername"))
+            pitcher = extras.getString("pitchername");
+
+            if(i.hasExtra("pitcherside"))
+            pitcherSide = extras.getString("pitcherside");
+
+            if(i.hasExtra("hittername"))
+            hitter = extras.getString("hittername");
+
+            if(i.hasExtra("hitterside"))
+            hitterSide = extras.getString("hitterside");
+        }
+
 
         records = storeData();
-        records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
+        records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
         refresh();
 
         release.setOnClickListener(new View.OnClickListener() {
@@ -376,7 +398,7 @@ public class MainActivity extends AppCompatActivity {
                 myDB.deleteAllData();
                 records = new ArrayList<>();
                 storeData();
-                records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
+                records.add(0,new Record(0,"name","postion","duration","event",0,0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
                 order = 1;
                 strike = 0;
                 balls = 0;
@@ -389,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putLong("start", start_time);
                 editor.putInt("order",order);
-                editor.putLong("strike", strike);
+                editor.putInt("strike", strike);
                 editor.putInt("ball",balls);
                 editor.putInt("pball", pball);
                 editor.putInt("pstrike",pstrike);
@@ -405,25 +427,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setTitle(getApplicationContext().getResources().getString(R.string.pitcherDialog));
-                final EditText nameInput = new EditText(getApplicationContext());
-                builder.setView(nameInput);
-                final EditText sideInput = new EditText(getApplicationContext());
-                builder.setView(sideInput);
-                builder.setPositiveButton(getApplicationContext().getResources().getString(R.string.confirmDialog), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.setNegativeButton(getApplicationContext().getResources().getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.create().show();
+                saveData();
+                Intent intent = new Intent(MainActivity.this, Pitcher.class);
+                startActivity(intent);
 
             }
         });
@@ -431,26 +437,9 @@ public class MainActivity extends AppCompatActivity {
         bhitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setTitle(getApplicationContext().getResources().getString(R.string.hitterDialog));
-                final EditText nameInput = new EditText(getApplicationContext());
-                builder.setView(nameInput);
-                final EditText sideInput = new EditText(getApplicationContext());
-                builder.setView(sideInput);
-                builder.setPositiveButton(getApplicationContext().getResources().getString(R.string.confirmDialog), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.setNegativeButton(getApplicationContext().getResources().getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.create().show();
+                saveData();
+                Intent intent = new Intent(MainActivity.this, Hitter.class);
+                startActivity(intent);
 
             }
 
@@ -515,7 +504,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = myDB.readAllData();
             while(cursor.moveToNext())
             {
-                Record record = new Record(0,"name","position","duration","event",0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side");
+                Record record = new Record(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6),cursor.getInt(7),cursor.getInt(8),cursor.getInt(9),cursor.getString(10),cursor.getString(11),cursor.getString(12),cursor.getString(13),cursor.getString(14));
                 loaded.add(record);
             }
 
@@ -533,7 +522,13 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("pstrike",pstrike);
         editor.putInt("outs", outs);
         editor.putInt("inning",inning);
+        editor.putString("basesituation",baseSituation); //TODO vymyslet
+        editor.putString("pitcher",pitcher);
+        editor.putString("pitcherside",pitcherSide);
+        editor.putString("hitter",hitter);
+        editor.putString("hitterside",hitterSide);
         editor.apply();
+
     }
 
     private void createFile(Uri pickerInitialUri, String filename) {

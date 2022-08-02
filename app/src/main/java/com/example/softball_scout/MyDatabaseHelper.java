@@ -84,11 +84,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_PBALL,record.getPball());
         cv.put(COLUMN_OUT,record.getOut());
 
-        cv.put(COLUMN_BASESITUATION,record.getPosition());
-        cv.put(COLUMN_PITCHERNAME,record.getDuration());
-        cv.put(COLUMN_PITCHERSIDE,record.getAction());
-        cv.put(COLUMN_HITTERNAME,record.getStrike());
-        cv.put(COLUMN_HITTERSIDE,record.getBall());
+        cv.put(COLUMN_BASESITUATION,record.getBaseSituation());
+        cv.put(COLUMN_PITCHERNAME,record.getPitcherName());
+        cv.put(COLUMN_PITCHERSIDE,record.getPitcherSide());
+        cv.put(COLUMN_HITTERNAME,record.getHitterName());
+        cv.put(COLUMN_HITTERSIDE,record.getHitterSide());
 
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1)
@@ -117,11 +117,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_PBALL,record.getBall());
         cv.put(COLUMN_OUT,record.getOut());
 
-        cv.put(COLUMN_BASESITUATION,record.getPosition());
-        cv.put(COLUMN_PITCHERNAME,record.getDuration());
-        cv.put(COLUMN_PITCHERSIDE,record.getAction());
-        cv.put(COLUMN_HITTERNAME,record.getStrike());
-        cv.put(COLUMN_HITTERSIDE,record.getBall());
+        cv.put(COLUMN_BASESITUATION,record.getBaseSituation());
+        cv.put(COLUMN_PITCHERNAME,record.getPitcherName());
+        cv.put(COLUMN_PITCHERSIDE,record.getPitcherSide());
+        cv.put(COLUMN_HITTERNAME,record.getHitterName());
+        cv.put(COLUMN_HITTERSIDE,record.getHitterSide());
 
         long result = db.update(TABLE_NAME,cv,"_id=?",new String[]{record.getId().toString()});
         if (result ==-1)

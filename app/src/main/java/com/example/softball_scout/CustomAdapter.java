@@ -45,17 +45,29 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-
-
-        holder.name.setText(String.valueOf(records.get(position).getName()));
-        holder.position.setText(String.valueOf(records.get(position).getPosition()));
-        holder.duration.setText(String.valueOf(records.get(position).getDuration()));
-        holder.action.setText(String.valueOf(records.get(position).getAction()));
-        holder.state.setText(records.get(position).getState());
-        holder.pitcher.setText(records.get(position).getPitcherName());
-        holder.hitter.setText(records.get(position).getHitterName());
-        holder.basesituation.setText(records.get(position).getBaseSituation());
-        holder.out.setText(records.get(position).getOut());
+        if(position>0) {
+            holder.name.setText(String.valueOf(records.get(position).getName()));
+            holder.position.setText(String.valueOf(records.get(position).getPosition()));
+            holder.duration.setText(String.valueOf(records.get(position).getDuration()));
+            holder.action.setText(String.valueOf(records.get(position).getAction()));
+            holder.state.setText(records.get(position).getState());
+            holder.pitcher.setText(records.get(position).getPitcherName());
+            holder.hitter.setText(records.get(position).getHitterName());
+            holder.basesituation.setText(records.get(position).getBaseSituation());
+            holder.out.setText(records.get(position).getOut().toString());
+        }
+        else
+        {
+            holder.name.setText("Name");
+            holder.position.setText("Position");
+            holder.duration.setText("Duration");
+            holder.action.setText("Event");
+            holder.state.setText("State");
+            holder.pitcher.setText("Pitcher");
+            holder.hitter.setText("Hitter");
+            holder.basesituation.setText("Base situation");
+            holder.out.setText("Out");
+        }
 
     }
 
