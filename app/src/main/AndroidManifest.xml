@@ -19,8 +19,15 @@
         android:theme="@style/Theme.Softball_scout"
         tools:targetApi="31">
         <activity
-            android:name=".Pitcher"
+            android:name=".DeleteLastRow"
             android:exported="false" />
+        <activity
+            android:name=".Basestate"
+            android:exported="false" />
+        <activity
+            android:name=".Pitcher"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,7 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Hitter" />
+        <activity
+            android:name=".Hitter"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

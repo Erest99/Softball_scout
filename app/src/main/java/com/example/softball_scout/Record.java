@@ -18,6 +18,7 @@ public class Record {
     private String hitterName;
     private String hitterSide;
     private Integer out;
+    private Integer inning;
 
 
 
@@ -156,7 +157,15 @@ public class Record {
         this.pball = pball;
     }
 
-    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball,Integer out, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+    public Integer getInning() {
+        return inning;
+    }
+
+    public void setInning(Integer inning) {
+        this.inning = inning;
+    }
+
+    public Record(Integer id, String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, Integer out, Integer inning, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -172,9 +181,10 @@ public class Record {
         this.pstrike = pstrike;
         this.pball = pball;
         this.out = out;
+        this.inning = inning;
     }
 
-    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, Integer out, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
+    public Record(String name, String position, String duration, String action, Integer strike, Integer ball, Integer pstrike, Integer pball, Integer out,Integer inning, String baseSituation, String pitcherName, String pitcherSide, String hitterName, String hitterSide) {
         this.name = name;
         this.position = position;
         this.duration = duration;
@@ -189,5 +199,6 @@ public class Record {
         this.pstrike = pstrike;
         this.pball = pball;
         this.out = out;
+        this.inning = inning;
     }
 }

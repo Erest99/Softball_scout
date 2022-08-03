@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/activity_basestate.xml" value="0.23125" />
+        <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/activity_delete_last_row.xml" value="0.33" />
         <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/activity_pitcher.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/base_layout.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/hitter_layout.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/pitcher_layout.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Horky/AndroidStudioProjects/Softball_scout/app/src/main/res/layout/row.xml" value="0.358695652173913" />

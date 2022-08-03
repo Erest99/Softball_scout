@@ -39,5 +39,24 @@
     <string name="cancelDialog">Cancel</string>
     <string name="out">Out</string>
     <string name="basesituation">Base situation</string>
+
+    <string-array name="out">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="strike">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="ball">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>
 

@@ -33,4 +33,11 @@ public class Pitcher extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Pitcher.this, MainActivity.class);
+        startActivity(intent);
+
+    }
 }

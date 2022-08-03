@@ -1,5 +1,6 @@
 package com.example.softball_scout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,11 +39,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO možnost inputu pro base state -> new view kde bude obrázek met
-    //TODO přidat inning
-    //TODO add row edit (no time)
 
-    Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset, bpitcher, bhitter;
+    Button swing, look, ball, foul, hit, play, illegal, intentional, wild, release, send, reset, bpitcher, bhitter, dlr;
     boolean released,match_start,firstbase,secondbase,thirdbase;
     int order = 1;
     int outs;
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     int pball;
     int inning;
     long start_time, release_time;
-    String pitcher,hitter, hitterSide, pitcherSide, baseSituation;
+    String pitcher,hitter, hitterSide, pitcherSide, baseSituation, position, duration,event;
     Integer strike, balls;
     ArrayList<Record> records = new ArrayList<>();
     RecyclerView recyclerView;
@@ -77,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         bpitcher = findViewById(R.id.b_pitcher);
         bhitter = findViewById(R.id.b_hitter);
+        dlr = findViewById(R.id.b_dlr);
 
         myDB = new MyDatabaseHelper(this);
 
@@ -88,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getApplication().getSharedPreferences("Scout",Context.MODE_PRIVATE);
         start_time = sharedPref.getLong("start",0);
         if(start_time>0)match_start = true;
+        position = sharedPref.getString("position","0");
+        duration = sharedPref.getString("duration","0");
+        event = sharedPref.getString("event","");
         order = sharedPref.getInt("order",1);
         strike = sharedPref.getInt("strike",0);
         balls = sharedPref.getInt("ball",0);
@@ -95,11 +97,14 @@ public class MainActivity extends AppCompatActivity {
         pstrike = sharedPref.getInt("pstrike",0);
         outs = sharedPref.getInt("outs",0);
         inning = sharedPref.getInt("inning",1);
-        baseSituation = sharedPref.getString("basesituation","empty");
-        pitcher = sharedPref.getString("pitcher","unknown");
-        pitcherSide = sharedPref.getString("pitcherside","unknown");
-        hitter = sharedPref.getString("hitter","unknown");
-        hitterSide = sharedPref.getString("hitterside","unknown");
+        baseSituation = sharedPref.getString("basesituation","");
+        pitcher = sharedPref.getString("pitcher","");
+        pitcherSide = sharedPref.getString("pitcherside","");
+        hitter = sharedPref.getString("hitter","");
+        hitterSide = sharedPref.getString("hitterside","");
+        firstbase = sharedPref.getBoolean("1B",false);
+        secondbase = sharedPref.getBoolean("2B",false);
+        thirdbase = sharedPref.getBoolean("3B",false);
 
         Bundle extras = getIntent().getExtras();
         Intent i = getIntent();
@@ -116,11 +121,39 @@ public class MainActivity extends AppCompatActivity {
 
             if(i.hasExtra("hitterside"))
             hitterSide = extras.getString("hitterside");
+
+            if(i.hasExtra("1B"))
+            {
+                firstbase = extras.getBoolean("1B");
+                secondbase = extras.getBoolean("2B");
+                thirdbase = extras.getBoolean("3B");
+                outs = extras.getInt("out");
+                getBaseState(firstbase,secondbase,thirdbase);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,inning,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                myDB.addItem(record,MainActivity.this);
+                records.add(record);
+                order++;
+                refresh();
+                released = false;
+                allowButtons(released);
+                if(extras.getBoolean("newHitter"))askForHitter();
+                saveData();
+            }
+
+            if(i.hasExtra("strike"))
+            {
+                strike = extras.getInt("strike");
+                balls = extras.getInt("ball");
+                inning = extras.getInt("inning");
+                outs = extras.getInt("out");
+                saveData();
+            }
+
         }
 
 
         records = storeData();
-        records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
+        records.add(0,new Record(0,"name","position","duration","event",0,0,0,0,0,1,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
         refresh();
 
         release.setOnClickListener(new View.OnClickListener() {
@@ -142,11 +175,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "strike swinging";
+                event = "strike swinging";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
                 if(strike<2)strike++;
@@ -155,8 +188,9 @@ public class MainActivity extends AppCompatActivity {
                     strike=0;
                     balls = 0;
                     addOut();
+                    askForHitter();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,0,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,inning,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -171,11 +205,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "strike looking";
+                event = "strike looking";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
                 if(strike<2)strike++;
@@ -184,8 +218,9 @@ public class MainActivity extends AppCompatActivity {
                     strike=0;
                     balls = 0;
                     addOut();
+                    askForHitter();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,inning,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -200,28 +235,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "ball";
+                event = "ball";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
-                if(balls<3)balls++;
+                if(balls<3)
+                {
+                    balls++;
+                    Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,inning,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                    myDB.addItem(record,MainActivity.this);
+                    records.add(record);
+                    order++;
+                    refresh();
+                    released = false;
+                    allowButtons(released);
+                    saveData();
+                }
                 else
                 {
                     strike=0;
                     balls = 0;
-                    updateBaseSituation();
+                    callBaseState(firstbase,secondbase,thirdbase,true);
+                    saveData();
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
-                saveData();
             }
         });
 
@@ -229,15 +268,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "foul ball";
+                event = "foul ball";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
                 if(strike<2)strike++;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
+                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,inning,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
                 myDB.addItem(record,MainActivity.this);
                 records.add(record);
                 order++;
@@ -252,23 +291,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "intentional walk";
+                event = "intentional walk";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
-                updateBaseSituation();
+                callBaseState(firstbase,secondbase,thirdbase,true);
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
                 saveData();
             }
         });
@@ -277,11 +309,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "illegal pitch";
+                event = "illegal pitch";
+                boolean hitr = false;
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
                 if(balls<3)balls++;
@@ -289,15 +322,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     strike=0;
                     balls = 0;
-                    updateBaseSituation();
+                    hitr = true;
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
+                callBaseState(firstbase,secondbase,thirdbase,hitr);
                 saveData();
             }
         });
@@ -306,11 +333,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "wild pitch/passed ball";
+                event = "wild pitch/passed ball";
+                boolean hitr = false;
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
                 if(balls<3)balls++;
@@ -318,15 +346,10 @@ public class MainActivity extends AppCompatActivity {
                 {
                     strike=0;
                     balls = 0;
-                    updateBaseSituation();
+                    hitr = true;
+
                 }
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
+                callBaseState(firstbase,secondbase,thirdbase,hitr);
                 saveData();
             }
         });
@@ -335,23 +358,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "hit by pitch";
+                event = "hit by pitch";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
-                updateBaseSituation();
+                callBaseState(firstbase,secondbase,thirdbase,true);
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
                 saveData();
             }
         });
@@ -360,23 +376,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //vypni timer
-                String event = "in play";
+                event = "in play";
                 Long pos = System.nanoTime()/1000000000 - start_time;
                 Long dur = System.nanoTime()/1000000000 - release_time;
-                String position = toTime(pos);
-                String duration = toTime(dur);
+                position = toTime(pos);
+                duration = toTime(dur);
                 pball = balls;
                 pstrike = strike;
-                updateBaseSituation();
+                callBaseState(firstbase,secondbase,thirdbase,true);
                 strike=0;
                 balls = 0;
-                Record record = new Record("Pitch "+ order,position, duration,event,strike,balls,pstrike,pball,outs,baseSituation,pitcher,pitcherSide,hitter,hitterSide);
-                myDB.addItem(record,MainActivity.this);
-                records.add(record);
-                order++;
-                refresh();
-                released = false;
-                allowButtons(released);
                 saveData();
             }
         });
@@ -398,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
                 myDB.deleteAllData();
                 records = new ArrayList<>();
                 storeData();
-                records.add(0,new Record(0,"name","postion","duration","event",0,0,0,0,0,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
+                records.add(0,new Record(0,"name","postion","duration","event",0,0,0,0,0,1,"base situation","pitcher name","pitcher side","hitter name","hitter side"));
                 order = 1;
                 strike = 0;
                 balls = 0;
@@ -406,6 +415,14 @@ public class MainActivity extends AppCompatActivity {
                 pstrike = 0;
                 inning = 1;
                 outs = 0;
+                pitcher = "";
+                pitcherSide = "";
+                hitter = "";
+                hitterSide = "";
+                firstbase = false;
+                secondbase = false;
+                thirdbase = false;
+                baseSituation = "";
                 start_time = System.nanoTime()/1000000000;
                 SharedPreferences sharedPref = getApplication().getSharedPreferences("Scout", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -417,8 +434,18 @@ public class MainActivity extends AppCompatActivity {
                 editor.putInt("pstrike",pstrike);
                 editor.putInt("outs", outs);
                 editor.putInt("inning",inning);
+                editor.putString("pitcher","");
+                editor.putString("pitcherside","");
+                editor.putString("hitter","");
+                editor.putString("hitterside","");
+                editor.putBoolean("1B",false);
+                editor.putBoolean("2B",false);
+                editor.putBoolean("3B",false);
                 editor.apply();
+                Intent i = getIntent().replaceExtras(new Bundle());
                 refresh();
+
+
 
             }
         });
@@ -443,6 +470,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+        });
+
+        dlr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveData();
+                Intent intent = new Intent(MainActivity.this, DeleteLastRow.class);
+                startActivity(intent);
+            }
         });
 
 
@@ -470,13 +506,14 @@ public class MainActivity extends AppCompatActivity {
         {
             inning++;
             outs = 0;
+            baseSituation = "";
+            firstbase = false;
+            secondbase = false;
+            thirdbase = false;
+            saveData();
         }
     }
 
-    void updateBaseSituation()
-    {
-
-    }
 
     void refresh()
     {
@@ -504,7 +541,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = myDB.readAllData();
             while(cursor.moveToNext())
             {
-                Record record = new Record(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6),cursor.getInt(7),cursor.getInt(8),cursor.getInt(9),cursor.getString(10),cursor.getString(11),cursor.getString(12),cursor.getString(13),cursor.getString(14));
+                Record record = new Record(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6),cursor.getInt(7),cursor.getInt(8),cursor.getInt(9),cursor.getInt(10),cursor.getString(11),cursor.getString(12),cursor.getString(13),cursor.getString(14),cursor.getString(15));
                 loaded.add(record);
             }
 
@@ -517,7 +554,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = this.getSharedPreferences("Scout", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong("start", start_time);
+        editor.putString("position",position);
+        editor.putString("duration",duration);
+        editor.putString("event",event);
         editor.putInt("order",order);
+        editor.putInt("strike",strike);
+        editor.putInt("ball",balls);
         editor.putInt("pball", pball);
         editor.putInt("pstrike",pstrike);
         editor.putInt("outs", outs);
@@ -527,7 +569,12 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("pitcherside",pitcherSide);
         editor.putString("hitter",hitter);
         editor.putString("hitterside",hitterSide);
+        editor.putBoolean("1B",firstbase);
+        editor.putBoolean("2B",secondbase);
+        editor.putBoolean("3B",thirdbase);
         editor.apply();
+
+
 
     }
 
@@ -577,7 +624,14 @@ public class MainActivity extends AppCompatActivity {
                 fileOutputStream.write((i.getPosition() + ",").getBytes());
                 fileOutputStream.write((i.getDuration() + ",").getBytes());
                 fileOutputStream.write((i.getAction() + ",").getBytes());
-                fileOutputStream.write((i.getState() + "\n").getBytes());
+                fileOutputStream.write((i.getState() + ",").getBytes());
+                fileOutputStream.write((i.getOut() + ",").getBytes());
+                fileOutputStream.write((i.getInning() + ",").getBytes());
+                fileOutputStream.write((i.getPstate() + ",").getBytes());
+                fileOutputStream.write((i.getPitcherName() + ",").getBytes());
+                fileOutputStream.write((i.getPitcherSide() + ",").getBytes());
+                fileOutputStream.write((i.getHitterName() + ",").getBytes());
+                fileOutputStream.write((i.getHitterSide() + "\n").getBytes());
 
             }
             fileOutputStream.close();
@@ -606,4 +660,37 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    void callBaseState(boolean B1, boolean B2, boolean B3, boolean newHitter)
+    {
+        saveData();
+        Intent intent = new Intent(MainActivity.this, Basestate.class);
+        intent.putExtra("1B",B1);
+        intent.putExtra("2B",B2);
+        intent.putExtra("3B",B3);
+        intent.putExtra("out",outs);
+        intent.putExtra("newHitter",newHitter);
+        startActivity(intent);
+    }
+
+    void getBaseState(boolean B1, boolean B2, boolean B3)
+    {
+        baseSituation = "";
+        if(B3)baseSituation += "B3 ";
+        if(B2)baseSituation += "B2 ";
+        if(B1)baseSituation += "B1";
+    }
+
+    void askForHitter()
+    {
+        saveData();
+        Intent intent = new Intent(MainActivity.this, Hitter.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
 }

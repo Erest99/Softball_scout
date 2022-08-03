@@ -33,6 +33,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PSTRIKE = "previous_strike";
     private static final String COLUMN_PBALL = "previous_ball";
     private static final String COLUMN_OUT = "out";
+    private static final String COLUMN_INNING = "inning";
 
 
     public MyDatabaseHelper(@Nullable Context context) {
@@ -53,6 +54,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PSTRIKE + " INTEGER, " +
                 COLUMN_PBALL + " INTEGER, " +
                 COLUMN_OUT + " INTEGER, " +
+                COLUMN_INNING + " INTEGER, " +
                 COLUMN_BASESITUATION + " TEXT, " +
                 COLUMN_PITCHERNAME + " TEXT, " +
                 COLUMN_PITCHERSIDE + " TEXT, " +
@@ -83,6 +85,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_PSTRIKE,record.getPstrike());
         cv.put(COLUMN_PBALL,record.getPball());
         cv.put(COLUMN_OUT,record.getOut());
+        cv.put(COLUMN_INNING,record.getInning());
 
         cv.put(COLUMN_BASESITUATION,record.getBaseSituation());
         cv.put(COLUMN_PITCHERNAME,record.getPitcherName());
@@ -116,6 +119,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_PSTRIKE,record.getStrike());
         cv.put(COLUMN_PBALL,record.getBall());
         cv.put(COLUMN_OUT,record.getOut());
+        cv.put(COLUMN_INNING,record.getInning());
 
         cv.put(COLUMN_BASESITUATION,record.getBaseSituation());
         cv.put(COLUMN_PITCHERNAME,record.getPitcherName());
@@ -183,6 +187,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         return cursor;
 
+    }
+
+    public void deleteLastRow()
+    {
+        String query = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(db != null)
+        {
+            cursor = db.rawQuery(query,null);
+        }
+        int max = 0;
+        while(cursor.moveToNext())
+        {
+            if(cursor.getInt(0)>max)max = cursor.getInt(0);
+        }
+        deleteOneRow(String.valueOf(max), context.getApplicationContext());
     }
 
 }
